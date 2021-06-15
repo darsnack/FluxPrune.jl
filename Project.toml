@@ -1,0 +1,13 @@
+name = "FluxPrune"
+uuid = "1384c1f3-d8dd-4e05-9122-0c792acaad72"
+authors = ["Kyle Daruwalla <daruwalla.k.public@icloud.com>"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
