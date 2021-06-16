@@ -1,6 +1,7 @@
 module FluxPrune
 
-export prune, levelprune
+export prune,
+       levelprune, thresholdprune
 
 using MaskedArrays
 using MaskedArrays: mask
@@ -8,14 +9,7 @@ using Functors: isleaf, functor
 using Flux
 
 include("functor.jl")
-
-function levelprune(w::AbstractArray, level)
-    p = sortperm(vec(w))
-    n = ceil(Int, (1 - level) * length(p))
-
-    return mask(w, p[1:n])
-end
-levelprune(level) = w -> levelprune(w, level)
+include("unstructured.jl")
 
 prune(strategy, m) = mappruneable(strategy, m; exclude = x -> isleaf(x) && x isa AbstractArray)
 
