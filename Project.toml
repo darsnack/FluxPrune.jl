@@ -9,6 +9,7 @@ Functors = "d9f16b24-f501-4c13-a1f2-28368ffc5196"
 MaskedArrays = "e3e6debb-e142-42bc-8e83-ba8646d1d252"
 
 [compat]
+Functors = "0.2"
 julia = "1"
 
 [extras]
