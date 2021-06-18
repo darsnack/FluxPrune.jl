@@ -1,7 +1,7 @@
 module FluxPrune
 
 export prune,
-       levelprune, thresholdprune
+       LevelPrune, ThresholdPrune
 
 using MaskedArrays
 using MaskedArrays: mask
