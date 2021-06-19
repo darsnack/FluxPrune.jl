@@ -6,6 +6,7 @@ version = "0.1.0"
 [deps]
 Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
 Functors = "d9f16b24-f501-4c13-a1f2-28368ffc5196"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 MaskedArrays = "e3e6debb-e142-42bc-8e83-ba8646d1d252"
 
 [compat]
