@@ -1,6 +1,6 @@
 module FluxPrune
 
-export prune,
+export prune, iterativeprune,
        LevelPrune, ThresholdPrune,
        ChannelPrune
 
@@ -13,7 +13,6 @@ using Flux
 include("functor.jl")
 include("unstructured.jl")
 include("structured.jl")
-
-prune(strategy, m) = mappruneable(strategy, m; exclude = x -> isleaf(x) && x isa AbstractArray)
+include("prune.jl")
 
 end
