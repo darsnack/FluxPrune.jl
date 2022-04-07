@@ -7,7 +7,7 @@ function channelprune(x::AbstractArray{<:Any, 4}, level;
     return mask(x, :, :, :, p[1:n])
 end
 channelprune(m::Conv, level; kwargs...) =
-    mappruneable1(w -> channelprune(w, level; kwargs...), m)
+    mappruneable(w -> channelprune(w, level; kwargs...), m)
 
 struct ChannelPrune{T, S}
     level::T
