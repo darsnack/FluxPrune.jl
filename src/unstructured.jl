@@ -11,7 +11,7 @@ end
 (p::LevelPrune)(w) = levelprune(w, p.level)
 
 
-thresholdprune(w::AbstractArray, threshold) = mask(w, abs(w) .>= threshold)
+thresholdprune(w::AbstractArray, threshold) = mask(w, abs.(w) .>= threshold)
 
 struct ThresholdPrune{T<:Real}
     threshold::T
