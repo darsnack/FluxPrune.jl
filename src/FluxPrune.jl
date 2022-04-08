@@ -16,6 +16,6 @@ include("nnlib.jl")
 include("functor.jl")
 include("unstructured.jl")
 include("structured.jl")
-include("prune.jl")
+include("strategies.jl")
 
 end

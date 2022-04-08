@@ -6,15 +6,19 @@ function channelprune(x::AbstractArray{<:Any, 4}, level;
 
     return mask(x, :, :, :, p[1:n])
 end
-channelprune(m::Conv, level; kwargs...) =
-    mappruneable(w -> channelprune(w, level; kwargs...), m)
 
 struct ChannelPrune{T, S}
     level::T
     magnitude::S
 end
 ChannelPrune(level; magnitude = x -> norm(x, 1)) = ChannelPrune(level, magnitude)
-(p::ChannelPrune)(m) = channelprune(m, p.level; magnitude = p.magnitude)
+(p::ChannelPrune)(w) = channelprune(w, p.level; magnitude = p.magnitude)
 
-prune(strategy::ChannelPrune, m) =
-    mappruneable(strategy, m; exclude = x -> x isa Conv)
+function prune(strategy::ChannelPrune, m)
+    exclude(x) = x isa Conv || _default_prune_exclude(x)
+    strategies = mappruneable_structure(m; exclude = exclude) do _m
+        (_m isa Conv) ? walkpruneable_structure(_ -> strategy, _m) : identity
+    end
+
+    return prune(strategies, m)
+end

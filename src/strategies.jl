@@ -1,6 +1,3 @@
-prune(strategy, m) = mappruneable(strategy, m; exclude = x -> isleaf(x) && x isa AbstractArray)
-prune(strategies::Union{<:Tuple, <:AbstractVector}, m::Chain) = Chain(prune.(strategies, m)...)
-
 function iterativeprune(finetune!, stages, m; maxtries = 5)
     for stage in stages
         # prune to current stage
