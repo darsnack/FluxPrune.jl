@@ -11,6 +11,12 @@ function walkpruneable(f, x, s)
 
     return re(map((x, s) -> x ∈ tchildren ? f(x, s) : x, children, schildren))
 end
+function walkpruneable(f, x)
+    children, re = functor(x)
+    tchildren = pruneable(x)
+
+    return re(map(x -> x ∈ tchildren ? f(x) : x, children))
+end
 function walkpruneable_structure(f, x)
     children, _ = functor(x)
     tchildren = pruneable(x)
@@ -26,3 +32,5 @@ mappruneable_structure(f, x; exclude = _default_prune_exclude, kwargs...) =
 prune(strategies::Union{<:Tuple, <:NamedTuple}, m) = mappruneable(strategies, m)
 prune(strategy, m) = prune(mappruneable_structure(_ -> strategy, m), m)
 prune(strategies::AbstractVector, m::Chain) = Chain(prune.(strategies, m)...)
+
+keepprune(m) = fmap(freeze, m; exclude = _default_prune_exclude, walk = walkpruneable)

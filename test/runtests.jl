@@ -44,3 +44,13 @@ end
     @test count_slices(iszero, m̄[2].weight; dims = 4) ≈ 0.25 * 32
     @test sparsity(m̄[3].weight) ≈ 0.6 rtol=0.1
 end
+
+@testset "keepprune" begin
+    m = Chain(Conv((3, 3), 3 => 16), Conv((3, 3), 16 => 32), Dense(512, 10))
+    m̄ = keepprune(prune(LevelPrune(0.5), m))
+    for layer in m̄
+        @test sparsity(layer.weight) ≈ 0.5 rtol=0.1
+        @test layer.weight isa Array
+        @test layer.bias isa Array
+    end
+end
