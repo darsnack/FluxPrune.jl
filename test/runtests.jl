@@ -54,3 +54,11 @@ end
         @test layer.bias isa Array
     end
 end
+
+@testset "Training" begin
+    m = Chain(Conv((3, 3), 3 => 16), GlobalMeanPool(), Flux.flatten, Dense(16, 10))
+    m̄ = prune([ChannelPrune(0.1), identity, identity, LevelPrune(0.1)], m)
+    ps = Flux.params(m̄)
+    gs = Flux.gradient(() -> sum(m(rand(Float32, 12, 12, 3, 2))), ps)
+    @test (Flux.Optimise.update!(Momentum(), ps, gs); true)
+end

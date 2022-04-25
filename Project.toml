@@ -1,7 +1,7 @@
 name = "FluxPrune"
 uuid = "1384c1f3-d8dd-4e05-9122-0c792acaad72"
 authors = ["Kyle Daruwalla <daruwalla.k.public@icloud.com>"]
-version = "0.1.1"
+version = "0.2.0"
 
 [deps]
 ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
@@ -14,7 +14,7 @@ NNlib = "872c559c-99b0-510c-b3b7-b6c96a88d5cd"
 
 [compat]
 ChainRulesCore = "1"
-Flux = "0.12, 0.13"
+Flux = "0.13"
 Functors = "0.2.8"
 julia = "1.6"
 MacroTools = "0.5"
