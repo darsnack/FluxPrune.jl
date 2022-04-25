@@ -9,6 +9,7 @@ using ChainRulesCore
 using Flux
 
 include("nnlib.jl")
+include("flux.jl")
 
 include("functor.jl")
 export prune, keepprune
