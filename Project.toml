@@ -18,7 +18,7 @@ Flux = "0.13"
 Functors = "0.2.8"
 julia = "1.6"
 MacroTools = "0.5"
-MaskedArrays = "0.1"
+MaskedArrays = "0.2"
 NNlib = "0.7, 0.8"
 
 [extras]
