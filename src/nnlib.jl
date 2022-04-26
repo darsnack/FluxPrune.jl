@@ -11,7 +11,7 @@ for fconv in (:conv, :depthwiseconv), WT in (MaskedArray, MaskedSliceArray)
         NNlib.$fconv(x::AbstractArray{Flux.NilNumber.Nil, N}, w::$WT{wT, N};
                      kwargs...) where {xT, wT, N} = NNlib.$fconv(x, freeze(w); kwargs...)
         NNlib.$fconv(x::AbstractArray{Flux.NilNumber.Nil, N}, w::$WT{wT, N}, cdims::DenseConvDims;
-                     kwargs...) where {xT, wT, N} = NNlib.$fconv(x, freeze(w); kwargs...)
+                     kwargs...) where {xT, wT, N} = NNlib.$fconv(x, freeze(w), cdims; kwargs...)
 
         function ChainRulesCore.rrule(::typeof($fconv), x, w::$WT, cdims; kwargs...)
             y, pb = ChainRulesCore.rrule($fconv, x, freeze(w), cdims; kwargs...)
