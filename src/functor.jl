@@ -3,6 +3,7 @@ _default_prune_exclude(x) = isleaf(x) && (x isa AbstractArray)
 pruneable(m) = Flux.trainable(m)
 pruneable(m::Dense) = (weight = m.weight,)
 pruneable(m::Conv) = (weight = m.weight,)
+pruneable(::BatchNorm) = (;)
 
 function walkpruneable(f, x, s)
     children, re = functor(x)
