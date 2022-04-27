@@ -1,10 +1,10 @@
 module FluxPrune
 
 using MaskedArrays
-using MaskedArrays: mask, freeze, MaskedArray, MaskedSliceArray
+using MaskedArrays: mask, bitmask, freeze, MaskedArray, MaskedSliceArray
 using Functors: isleaf, functor
 using LinearAlgebra
-using NNlib
+using NNlib, NNlibCUDA
 using ChainRulesCore
 using Flux
 
