@@ -8,6 +8,16 @@ function iterativeprune(finetune!, stages, m; maxtries = 5)
         while (attempts < maxtries) && !finetune!(m̄)
             attempts += 1
         end
+
+        # exit early if we failed
+        if attempts >= maxtries
+            @warn """
+            Failed to finetune model to target, exiting pruning early.
+            Returning finetuned model from last successful stage.
+            """
+            break
+        end
+
         m = m̄
     end
 
