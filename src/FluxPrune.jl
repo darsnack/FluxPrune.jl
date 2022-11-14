@@ -7,20 +7,18 @@ using LinearAlgebra
 using NNlib, NNlibCUDA
 using ChainRulesCore
 using Flux
+using Zygote
 
-include("nnlib.jl")
-include("flux.jl")
+include("fastpaths.jl")
+# include("flux.jl")
 
 include("functor.jl")
 export prune, keepprune
 
-include("unstructured.jl")
-export LevelPrune, ThresholdPrune
-
-include("structured.jl")
-export ChannelPrune
-
 include("strategies.jl")
+export LevelPrune, ThresholdPrune, ChannelPrune
+
+include("recipes.jl")
 export iterativeprune
 
 end

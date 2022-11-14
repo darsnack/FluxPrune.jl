@@ -5,24 +5,27 @@ pruneable(m::Dense) = (weight = m.weight,)
 pruneable(m::Conv) = (weight = m.weight,)
 pruneable(::BatchNorm) = (;)
 
-function walkpruneable(f, x, s)
-    children, re = functor(x)
-    tchildren = pruneable(x)
-    schildren, _ = functor(s)
+map_filtered(f, subset, x, ys...) =
+    map((_x, _ys...) -> _x ∈ subset ? f(_x, _ys...) : _x, x, ys...)
 
-    return re(map((x, s) -> x ∈ tchildren ? f(x, s) : x, children, schildren))
-end
-function walkpruneable(f, x)
+function walkpruneable(recurse, x, prune_fns)
     children, re = functor(x)
-    tchildren = pruneable(x)
+    pchildren = pruneable(x)
+    prune_subfns, _ = functor(prune_fns)
 
-    return re(map(x -> x ∈ tchildren ? f(x) : x, children))
+    return re(map_filtered(recurse, pchildren, children, prune_subfns))
 end
-function walkpruneable_structure(f, x)
+function walkpruneable(recurse, x)
+    children, re = functor(x)
+    pchildren = pruneable(x)
+
+    return re(map_filtered(recurse, pchildren, children))
+end
+function walkpruneable_structure(recurse, x)
     children, _ = functor(x)
-    tchildren = pruneable(x)
+    pchildren = pruneable(x)
 
-    return map(x -> x ∈ tchildren ? f(x) : x, children)
+    return map_filtered(recurse, pchildren, children)
 end
 
 mappruneable(f, x; exclude = _default_prune_exclude, kwargs...) =
