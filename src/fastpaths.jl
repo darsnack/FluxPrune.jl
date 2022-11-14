@@ -1,6 +1,8 @@
 for T in (MaskedArray, MaskedSliceArray)
     @eval begin
-        function ChainRulesCore.rrule(::typeof(Base.:(*)), x::$T, y::AbstractVecOrMat)
+        function ChainRulesCore.rrule(::typeof(Base.:(*)),
+                                      x::$T,
+                                      y::AbstractVecOrMat{<:Union{Real, Complex}})
             y, pb = ChainRulesCore.rrule(*, freeze(x), y)
             function _pb(Δ)
                 Δs = pb(Δ)
@@ -8,7 +10,9 @@ for T in (MaskedArray, MaskedSliceArray)
             end
             return y, _pb
         end
-        function ChainRulesCore.rrule(::typeof(Base.:(*)), x::AbstractVecOrMat, y::$T)
+        function ChainRulesCore.rrule(::typeof(Base.:(*)),
+                                      x::AbstractVecOrMat{<:Union{Real, Complex}},
+                                      y::$T)
             y, pb = ChainRulesCore.rrule(*, x, freeze(y))
             function _pb(Δ)
                 Δs = pb(Δ)
@@ -16,8 +20,18 @@ for T in (MaskedArray, MaskedSliceArray)
             end
             return y, _pb
         end
-        Zygote.@adjoint Base.:(*)(x::$T, y::AbstractVecOrMat) = Zygote.chain_rrule(Zygote.ZygoteRuleConfig(), *, x, y)
-        Zygote.@adjoint Base.:(*)(x::AbstractVecOrMat, y::$T) = Zygote.chain_rrule(Zygote.ZygoteRuleConfig(), *, x, y)
+        function Zygote._pullback(ctx::Zygote.AContext,
+                                  ::typeof(Base.:(*)),
+                                  x::$T,
+                                  y::AbstractVecOrMat{<:Union{Real, Complex}})
+            return Zygote.chain_rrule(Zygote.ZygoteRuleConfig(ctx), *, x, y)
+        end
+        function Zygote._pullback(ctx::Zygote.AContext,
+                                  ::typeof(Base.:(*)),
+                                  x::AbstractVecOrMat{<:Union{Real, Complex}},
+                                  y::$T)
+            return Zygote.chain_rrule(Zygote.ZygoteRuleConfig(ctx), *, x, y)
+        end
     end
 end
 
