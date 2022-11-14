@@ -37,4 +37,4 @@ prune(strategies::Union{<:Tuple, <:NamedTuple}, m) = mappruneable(strategies, m)
 prune(strategy, m) = prune(mappruneable_structure(_ -> strategy, m), m)
 prune(strategies::AbstractVector, m::Chain) = Chain(prune.(strategies, m)...)
 
-keepprune(m) = fmap(freeze, m; exclude = _default_prune_exclude, walk = walkpruneable)
+keepprune(m) = fmap(freeze, m)
