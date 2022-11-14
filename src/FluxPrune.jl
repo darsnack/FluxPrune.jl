@@ -10,7 +10,7 @@ using Flux
 using Zygote
 
 include("fastpaths.jl")
-# include("flux.jl")
+include("flux.jl")
 
 include("functor.jl")
 export prune, keepprune
