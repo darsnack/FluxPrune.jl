@@ -1,5 +1,6 @@
 using FluxPrune
 using Flux
+using MaskedArrays: bitmask
 using Test
 
 sparsity(x) = count(iszero, x) / length(x)
@@ -24,12 +25,15 @@ end
 end
 
 @testset "ChannelPrune" begin
-    m = Chain(Conv((3, 3), 3 => 16), Conv((3, 3), 16 => 32), Dense(512, 10))
+    m = Chain(Conv((3, 3), 3 => 16), BatchNorm(16), Conv((3, 3), 16 => 32), Dense(512, 10))
     m̄ = prune(ChannelPrune(0.25), m)
     for layer in m̄
         if layer isa Conv
             @test count_slices(iszero, layer.weight; dims = 4) ≈ 0.25 * size(layer.weight, 4)
             @test layer.bias isa Array
+        elseif layer isa BatchNorm
+            @test sparsity(bitmask(layer.γ)) ≈ 0.25
+            @test sparsity(bitmask(layer.β)) ≈ 0.25
         else
             @test layer.weight isa Array
             @test layer.bias isa Array

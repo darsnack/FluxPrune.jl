@@ -1,23 +1,25 @@
-# for T in (MaskedArray, MaskedSliceArray)
-#     @eval begin
-#         function ChainRulesCore.rrule(::typeof(Base.:(*)), x::$T, y::AbstractMatrix)
-#             y, pb = ChainRulesCore.rrule(*, freeze(x), y)
-#             function _pb(Δ)
-#                 Δs = pb(Δ)
-#                 return (Δs[1], Δs[2] .* bitmask(x), Δs[3])
-#             end
-#             return y, _pb
-#         end
-#         function ChainRulesCore.rrule(::typeof(Base.:(*)), x::AbstractMatrix, y::$T)
-#             y, pb = ChainRulesCore.rrule(*, x, freeze(y))
-#             function _pb(Δ)
-#                 Δs = pb(Δ)
-#                 return (Δs[1], Δs[2], Δs[3] .* bitmask(y))
-#             end
-#             return y, _pb
-#         end
-#     end
-# end
+for T in (MaskedArray, MaskedSliceArray)
+    @eval begin
+        function ChainRulesCore.rrule(::typeof(Base.:(*)), x::$T, y::AbstractVecOrMat)
+            y, pb = ChainRulesCore.rrule(*, freeze(x), y)
+            function _pb(Δ)
+                Δs = pb(Δ)
+                return (Δs[1], Δs[2] .* bitmask(x), Δs[3])
+            end
+            return y, _pb
+        end
+        function ChainRulesCore.rrule(::typeof(Base.:(*)), x::AbstractVecOrMat, y::$T)
+            y, pb = ChainRulesCore.rrule(*, x, freeze(y))
+            function _pb(Δ)
+                Δs = pb(Δ)
+                return (Δs[1], Δs[2], Δs[3] .* bitmask(y))
+            end
+            return y, _pb
+        end
+        Zygote.@adjoint Base.:(*)(x::$T, y::AbstractVecOrMat) = Zygote.chain_rrule(Zygote.ZygoteRuleConfig(), *, x, y)
+        Zygote.@adjoint Base.:(*)(x::AbstractVecOrMat, y::$T) = Zygote.chain_rrule(Zygote.ZygoteRuleConfig(), *, x, y)
+    end
+end
 
 for T in (MaskedArray, MaskedSliceArray)
     @eval begin
